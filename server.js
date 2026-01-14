@@ -5,7 +5,7 @@ const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIO(server);ű
+const io = socketIO(server);
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
