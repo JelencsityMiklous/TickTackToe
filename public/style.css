@@ -5,39 +5,184 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #292929 0%, #948f8f 100%);
+  font-family: 'Rajdhani', 'Orbitron', 'Segoe UI', sans-serif;
+  background: #0a0a0a;
+  background-image: 
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,.03) 2px, rgba(255,255,255,.03) 4px),
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,.03) 2px, rgba(255,255,255,.03) 4px);
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* fenyes kozepso radial glow */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* csillagok animalt hatter */
+body::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(2px 2px at 20% 30%, white, transparent),
+    radial-gradient(2px 2px at 60% 70%, white, transparent),
+    radial-gradient(1px 1px at 50% 50%, white, transparent),
+    radial-gradient(1px 1px at 80% 10%, white, transparent),
+    radial-gradient(2px 2px at 90% 60%, white, transparent),
+    radial-gradient(1px 1px at 33% 80%, white, transparent),
+    radial-gradient(1px 1px at 15% 60%, white, transparent);
+  background-size: 200% 200%;
+  background-position: 0% 0%;
+  animation: stars 12s linear infinite;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+@keyframes stars {
+  from {
+    background-position: 0% 0%;
+  }
+  to {
+    background-position: 100% 100%;
+  }
+}
+
+/* urhajok animacioi */
+.spaceship {
+  position: absolute;
+  opacity: 0.6;
+  pointer-events: none;
+  filter: brightness(1.6);
+}
+
+.spaceship-1 {
+  top: 15%;
+  left: -100px;
+  animation: flyAcross1 20s linear infinite;
+}
+
+.spaceship-2 {
+  top: 60%;
+  right: -100px;
+  animation: flyAcross 20s linear infinite;
+  animation-delay: 1s;
+}
+
+.spaceship-3 {
+  top: 80%;
+  left: -100px;
+  animation: flyAcross3 20s linear infinite;
+  animation-delay: 1s;
+}
+
+@keyframes flyAcross1 {
+  0% {
+    left: -100px;
+    transform: rotate(-5deg) scale(0.8);
+  }
+  100% {
+    left: calc(100% + 100px);
+    transform: rotate(-5deg) scale(0.8);
+  }
+}
+
+@keyframes flyAcross2 {
+  0% {
+    right: -100px;
+    transform: rotate(5deg) scaleX(-1) scale(0.6);
+  }
+  100% {
+    right: calc(100% + 100px);
+    transform: rotate(5deg) scaleX(-1) scale(0.6);
+  }
+}
+
+@keyframes flyAcross3 {
+  0% {
+    left: -100px;
+    transform: rotate(-3deg) scale(0.5);
+  }
+  100% {
+    left: calc(100% + 100px);
+    transform: rotate(-3deg) scale(0.5);
+  }
 }
 
 .container {
   width: 100%;
   max-width: 600px;
+  position: relative;
+  z-index: 1;
 }
 
-/* Lobby kártya */
+/* lobby kartya fekete uveg dizajn */
 .lobby-card {
-  background: rgb(172, 172, 172);
-  border-radius: 20px;
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
   padding: 40px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 
+    0 0 40px rgba(255, 255, 255, 0.05),
+    inset 0 0 60px rgba(255, 255, 255, 0.02);
+  position: relative;
+  backdrop-filter: blur(10px);
+}
+
+/* felso fenycsik */
+.lobby-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+}
+
+/* also fenycsik */
+.lobby-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
 }
 
 .lobby-card h1 {
   text-align: center;
-  color: #333;
+  color: #ffffff;
   margin-bottom: 10px;
   font-size: 2.5em;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
 }
 
 .subtitle {
   text-align: center;
-  color: #666;
+  color: #aaa;
   margin-bottom: 30px;
+  letter-spacing: 2px;
+  font-size: 0.9em;
 }
 
 .form-group {
@@ -47,97 +192,421 @@ body {
 .form-group label {
   display: block;
   margin-bottom: 8px;
-  color: #333;
+  color: #ccc;
   font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75em;
+  letter-spacing: 1.5px;
 }
 
 .form-group input {
   width: 100%;
   padding: 12px 15px;
-  border: 2px solid #e0e0e0;
-  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
   font-size: 16px;
-  transition: border-color 0.3s;
+  color: #fff;
+  transition: all 0.3s;
+}
+
+.form-group input::placeholder {
+  color: #666;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #5a5151;
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
 }
 
 .form-group small {
   display: block;
   margin-top: 5px;
-  color: #999;
+  color: #777;
   font-size: 13px;
 }
 
+/* gombok alap stilus */
 .btn {
-  padding: 12px 30px;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
+  padding: 14px 30px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* fenysugar animacio gombokra */
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transition: left 0.5s;
+}
+
+.btn:hover::before {
+  left: 100%;
 }
 
 .btn-primary {
-  background: #848485;
+  background: rgba(255, 255, 255, 0.05);
   color: white;
   width: 100%;
 }
 
 .btn-primary:hover {
-  background: #868686;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 0 20px rgba(255, 255, 255, 0.2),
+    inset 0 0 20px rgba(255, 255, 255, 0.05);
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.4);
 }
 
 .btn-secondary {
-  background: #48bb78;
+  background: rgba(255, 255, 255, 0.08);
   color: white;
 }
 
 .btn-secondary:hover {
-  background: #38a169;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .btn-secondary:disabled {
-  background: #a0aec0;
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.05);
+  color: #444;
   cursor: not-allowed;
 }
-/* Játéktábla */
+
+.btn-outline {
+  background: transparent;
+  color: #aaa;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.btn-small {
+  padding: 8px 12px;
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-small:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* hibauzenet */
+.error-message {
+  background: rgba(255, 100, 100, 0.1);
+  border: 1px solid rgba(255, 100, 100, 0.3);
+  border-radius: 2px;
+  padding: 15px;
+  margin-top: 20px;
+  color: #f99;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+/* jatek kartya ugyanolyan mint lobby */
+.game-card {
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 40px;
+  box-shadow: 
+    0 0 40px rgba(255, 255, 255, 0.05),
+    inset 0 0 60px rgba(255, 255, 255, 0.02);
+  position: relative;
+  backdrop-filter: blur(10px);
+}
+
+.game-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+}
+
+.game-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+}
+
+/* fejlec szoba koddal */
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.game-header h1 {
+  color: #ffffff;
+  font-size: 2em;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.room-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.room-code {
+  color: #aaa;
+  font-size: 0.9em;
+  letter-spacing: 1px;
+}
+
+.room-code strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+/* statusz sav kulonbozo allapotok */
+.status-bar {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  padding: 15px;
+  text-align: center;
+  color: #ccc;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+.status-bar.waiting {
+  border-color: rgba(255, 255, 100, 0.3);
+  color: #ff9;
+}
+
+.status-bar.playing {
+  border-color: rgba(100, 255, 100, 0.3);
+  color: #9f9;
+}
+
+.status-bar.winner {
+  border-color: rgba(100, 255, 100, 0.5);
+  color: #9f9;
+  background: rgba(100, 255, 100, 0.1);
+}
+
+.status-bar.loser {
+  border-color: rgba(255, 100, 100, 0.5);
+  color: #f99;
+  background: rgba(255, 100, 100, 0.1);
+}
+
+.status-bar.draw {
+  border-color: rgba(255, 255, 100, 0.5);
+  color: #ff9;
+  background: rgba(255, 255, 100, 0.1);
+}
+
+.status-bar.error {
+  border-color: rgba(255, 100, 100, 0.3);
+  color: #f99;
+}
+
+.status-bar.spectator {
+  border-color: rgba(150, 150, 255, 0.3);
+  color: #99f;
+}
+
+/* jatekosok megjelenites */
+.players-info {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.player .symbol {
+  font-size: 2em;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.player .name {
+  color: #ccc;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 0.9em;
+}
+
+/* en vagyok kiemelve */
+.player.me {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 15px 20px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.vs {
+  color: #666;
+  font-weight: 700;
+  font-size: 1.2em;
+  letter-spacing: 2px;
+}
+
+/* jatektabla futurisztikus */
 .game-board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 15px;
   margin: 20px 0;
   max-width: 400px;
   margin-left: auto;
   margin-right: auto;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
 }
- 
+
+/* cellak fenyes interaktiv */
 .cell {
   aspect-ratio: 1;
-  background: #505050;
-  border: 3px solid #272727;
-  border-radius: 10px;
+  background: rgba(10, 10, 10, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 48px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s;
+  position: relative;
+  font-weight: 300;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
- 
+
+/* gradient overlay cellakon */
+.cell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
 .cell:hover:not(.taken) {
-   background: #505050;
-  border-color: #272727;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
   transform: scale(1.05);
+  box-shadow: 
+    0 0 20px rgba(255, 255, 255, 0.15),
+    inset 0 0 20px rgba(255, 255, 255, 0.05);
 }
- 
+
+.cell:hover:not(.taken)::before {
+  opacity: 1;
+}
+
 .cell.taken {
   cursor: not-allowed;
-  background: white;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* jatek kontrollok */
+.game-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.rematch-status {
+  color: #aaa;
+  font-size: 0.9em;
+  letter-spacing: 1px;
+  display: inline-block;
+  margin-left: 10px;
+  font-style: italic;
+}
+
+/* akciok gombok */
+.actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* reszponziv mobil nezet */
+@media (max-width: 600px) {
+  .lobby-card, .game-card {
+    padding: 20px;
+  }
+
+  .game-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .cell {
+    font-size: 36px;
+  }
+
+  .player .symbol {
+    font-size: 24px;
+  }
+
+  .lobby-card h1, .game-header h1 {
+    font-size: 1.8em;
+  }
 }

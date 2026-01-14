@@ -7,10 +7,29 @@
 <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+    <svg class="spaceship spaceship-1" width="80" height="40" viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 20 L25 15 L60 18 L75 20 L60 22 L25 25 L5 20Z" fill="#ccc" stroke="#fff" stroke-width="0.5"/>
+    <path d="M60 18 L70 20 L60 22 L60 18Z" fill="#fff" opacity="0.8"/>
+    <circle cx="30" cy="20" r="3" fill="#4af" opacity="0.6"/>
+    <circle cx="40" cy="20" r="2" fill="#4af" opacity="0.6"/>
+  </svg>
+  
+  <svg class="spaceship spaceship-2" width="100" height="50" viewBox="0 0 100 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 25 L30 20 L70 23 L90 25 L70 27 L30 30 L10 25Z" fill="#aaa" stroke="#fff" stroke-width="0.5"/>
+    <path d="M70 23 L85 25 L70 27 L70 23Z" fill="#fff" opacity="0.7"/>
+    <path d="M20 25 L30 22 L30 28 L20 25Z" fill="#ddd" opacity="0.5"/>
+    <circle cx="35" cy="25" r="2" fill="#f44" opacity="0.6"/>
+  </svg>
+  
+  <svg class="spaceship spaceship-3" width="60" height="30" viewBox="0 0 60 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 15 L20 12 L45 14 L55 15 L45 16 L20 18 L5 15Z" fill="#bbb" stroke="#fff" stroke-width="0.5"/>
+    <path d="M45 14 L52 15 L45 16 L45 14Z" fill="#fff" opacity="0.8"/>
+    <circle cx="25" cy="15" r="2" fill="#4f4" opacity="0.6"/>
+  </svg>
 <div class="container">
 <div class="game-card">
 <div class="game-header">
-<h1>Tic-Tac-Toe</h1>
+<h1>🎮 Tic-Tac-Toe</h1>
 <div class="room-info">
 <span class="room-code">Szoba: <strong><%= roomCode %></strong></span>
 <button id="shareBtn" class="btn-small" title="Link másolása">📋</button>
@@ -61,6 +80,7 @@
   <script src="/socket.io/socket.io.js"></script>
 <script>
     const roomCode = '<%= roomCode %>';
+    const urlParams = new URLSearchParams(window.location.search);
     const playerName = urlParams.get('name');
  
     if (!playerName) {
@@ -73,7 +93,7 @@
     let gameStatus = 'waiting';
     let isSpectator = false;
  
-    // dom toretto elemek
+    // DOM elemek
     const statusBar = document.getElementById('statusBar');
     const gameBoard = document.getElementById('gameBoard');
     const cells = document.querySelectorAll('.cell');
@@ -82,10 +102,10 @@
     const playersInfo = document.getElementById('playersInfo');
     const shareBtn = document.getElementById('shareBtn');
  
-    // csatlakozas a szobahoz
+    // socket emit cstalakozas
     socket.emit('joinRoom', { playerName, roomCode });
  
-    // szobahoz csatlakozva
+    // szoba csatlakozas
     socket.on('roomJoined', (data) => {
       mySymbol = data.symbol;
       isSpectator = data.spectator || false;
@@ -102,8 +122,41 @@
       }
     });
  
+    // allapot
+    socket.on('stateUpdate', (data) => {
+      updateBoard(data.board);
+      currentTurn = data.turn;
+      gameStatus = data.status;
  
-    // bibi
+      if (data.status === 'playing') {
+        if (isSpectator) {
+          statusBar.textContent = `Folyamatban: ${currentTurn} következik`;
+        } else {
+          statusBar.textContent = currentTurn === mySymbol 
+            ? 'Te következel!' 
+            : `${currentTurn} játékos következik...`;
+        }
+        statusBar.className = 'status-bar';
+        rematchBtn.style.display = 'none';
+        rematchStatus.textContent = '';
+      } else if (data.status === 'finished') {
+        if (data.winner === 'draw') {
+          statusBar.textContent = 'Döntetlen!';
+          statusBar.className = 'status-bar draw';
+        } else {
+          const isWinner = data.winner === mySymbol;
+          statusBar.textContent = isSpectator 
+            ? `🏆 ${data.winner} nyert!`
+            : (isWinner ? 'Győztél!' : 'Vesztettél!');
+          statusBar.className = `status-bar ${isWinner ? 'winner' : 'loser'}`;
+        }
+        if (!isSpectator) {
+          rematchBtn.style.display = 'inline-block';
+        }
+      }
+    });
+ 
+    // hiba
     socket.on('errorMessage', (data) => {
       if (data.spectatorMode) {
         isSpectator = true;
@@ -112,16 +165,27 @@
       }
     });
  
-    // kilepes ellenfel
+    // ellenfel kielepes
     socket.on('opponentLeft', (data) => {
-      statusBar.textContent = data.message;
+      statusBar.textContent =data.message;
       statusBar.className = 'status-bar error';
       rematchBtn.style.display = 'none';
       rematchStatus.textContent = '';
     });
-
  
-    // tabla ujrafirssites
+    // ujrajatek
+    socket.on('rematchStatus', (data) => {
+      if (data.readyCount === 1) {
+        rematchStatus.textContent = '1/2 játékos kész az új játékra...';
+      } else if (data.readyCount === 2) {
+        rematchStatus.textContent = 'Új játék indul!';
+        setTimeout(() => {
+          rematchStatus.textContent = '';
+        }, 1000);
+      }
+    });
+ 
+    // jatektabla frissites
     function updateBoard(board) {
       cells.forEach((cell, index) => {
         const value = board[index];
@@ -130,7 +194,29 @@
       });
     }
  
-
+    // jatekosok megjelenjen
+    function updatePlayers(players) {
+      players.forEach(player => {
+        const elem = player.symbol === 'X' 
+          ? document.querySelector('#player1 .name')
+          : document.querySelector('#player2 .name');
+        elem.textContent = player.name;
+        if (player.symbol === mySymbol) {
+          elem.parentElement.classList.add('me');
+        }
+      });
+    }
+ 
+    // lepes
+    cells.forEach(cell => {
+      cell.addEventListener('click', () => {
+        if (isSpectator) return;
+        if (gameStatus !== 'playing') return;
+        if (currentTurn !== mySymbol) return;
+        const index = parseInt(cell.dataset.index);
+        socket.emit('makeMove', { roomCode, index });
+      });
+    });
  
     // uj gami
     rematchBtn.addEventListener('click', () => {
@@ -139,7 +225,16 @@
       rematchBtn.textContent = 'Várakozás...';
     });
  
-
+    // link a szobahoz
+    shareBtn.addEventListener('click', () => {
+      const url = window.location.origin + '/room/' + roomCode;
+      navigator.clipboard.writeText(url).then(() => {
+        shareBtn.textContent = '✓';
+        setTimeout(() => {
+          shareBtn.textContent = '📋';
+        }, 2000);
+      });
+    });
 </script>
 </body>
 </html>
