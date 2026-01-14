@@ -6,7 +6,7 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #292929 0%, #948f8f 100%);
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -21,7 +21,7 @@ body {
 
 /* Lobby kártya */
 .lobby-card {
-  background: white;
+  background: rgb(172, 172, 172);
   border-radius: 20px;
   padding: 40px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -62,7 +62,7 @@ body {
 
 .form-group input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #5a5151;
 }
 
 .form-group small {
@@ -83,15 +83,15 @@ body {
 }
 
 .btn-primary {
-  background: #667eea;
+  background: #848485;
   color: white;
   width: 100%;
 }
 
 .btn-primary:hover {
-  background: #5568d3;
+  background: #868686;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.4);
 }
 
 .btn-secondary {
@@ -120,8 +120,8 @@ body {
  
 .cell {
   aspect-ratio: 1;
-  background: #f7fafc;
-  border: 3px solid #e2e8f0;
+  background: #505050;
+  border: 3px solid #272727;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -132,8 +132,8 @@ body {
 }
  
 .cell:hover:not(.taken) {
-  background: #edf2f7;
-  border-color: #667eea;
+   background: #505050;
+  border-color: #272727;
   transform: scale(1.05);
 }
  
