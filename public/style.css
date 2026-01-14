@@ -107,4 +107,37 @@ body {
   background: #a0aec0;
   cursor: not-allowed;
 }
-
+/* Játéktábla */
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 20px 0;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+ 
+.cell {
+  aspect-ratio: 1;
+  background: #f7fafc;
+  border: 3px solid #e2e8f0;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+ 
+.cell:hover:not(.taken) {
+  background: #edf2f7;
+  border-color: #667eea;
+  transform: scale(1.05);
+}
+ 
+.cell.taken {
+  cursor: not-allowed;
+  background: white;
+}
