@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tic-Tac-Toe - Játék</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="container">
+<div class="game-card">
+<div class="game-header">
+<h1>Tic-Tac-Toe</h1>
+<div class="room-info">
+<span class="room-code">Szoba: <strong><%= roomCode %></strong></span>
+<button id="shareBtn" class="btn-small" title="Link másolása">📋</button>
+</div>
+</div>
+ 
+      <div id="statusBar" class="status-bar">
+        Csatlakozás...
+</div>
+ 
+      <div id="playersInfo" class="players-info" style="display: none;">
+<div class="player" id="player1">
+<span class="symbol">❌</span>
+<span class="name">-</span>
+</div>
+<div class="vs">VS</div>
+<div class="player" id="player2">
+<span class="symbol">⭕</span>
+<span class="name">-</span>
+</div>
+</div>
+ 
+      <div id="gameBoard" class="game-board">
+<div class="cell" data-index="0"></div>
+<div class="cell" data-index="1"></div>
+<div class="cell" data-index="2"></div>
+<div class="cell" data-index="3"></div>
+<div class="cell" data-index="4"></div>
+<div class="cell" data-index="5"></div>
+<div class="cell" data-index="6"></div>
+<div class="cell" data-index="7"></div>
+<div class="cell" data-index="8"></div>
+</div>
+ 
+      <div class="game-controls">
+<button id="rematchBtn" class="btn btn-secondary" style="display: none;">
+          Új játék
+</button>
+<span id="rematchStatus" class="rematch-status"></span>
+</div>
+ 
+      <div class="actions">
+<a href="/" class="btn btn-outline">Kilépés a lobbiba</a>
+</div>
+</div>
+</div>
+ 
+  <script src="/socket.io/socket.io.js"></script>
+<script>
+    const roomCode = '<%= roomCode %>';
+    const playerName = urlParams.get('name');
+ 
+    if (!playerName) {
+      window.location.href = '/';
+    }
+ 
+    const socket = io();
+    let mySymbol = null;
+    let currentTurn = 'X';
+    let gameStatus = 'waiting';
+    let isSpectator = false;
+ 
+    // dom toretto elemek
+    const statusBar = document.getElementById('statusBar');
+    const gameBoard = document.getElementById('gameBoard');
+    const cells = document.querySelectorAll('.cell');
+    const rematchBtn = document.getElementById('rematchBtn');
+    const rematchStatus = document.getElementById('rematchStatus');
+    const playersInfo = document.getElementById('playersInfo');
+    const shareBtn = document.getElementById('shareBtn');
+ 
+    // csatlakozas a szobahoz
+    socket.emit('joinRoom', { playerName, roomCode });
+ 
+    // szobahoz csatlakozva
+    socket.on('roomJoined', (data) => {
+      mySymbol = data.symbol;
+      isSpectator = data.spectator || false;
+ 
+      if (isSpectator) {
+        statusBar.textContent = 'Nézőként csatlakoztál';
+        statusBar.classList.add('spectator');
+      } else {
+        updatePlayers(data.players);
+        playersInfo.style.display = 'flex';
+        if (data.status === 'waiting') {
+          statusBar.textContent = 'Várakozás ellenfélre...';
+        }
+      }
+    });
+ 
+ 
+    // bibi
+    socket.on('errorMessage', (data) => {
+      if (data.spectatorMode) {
+        isSpectator = true;
+      } else {
+        alert(data.message);
+      }
+    });
+ 
+    // kilepes ellenfel
+    socket.on('opponentLeft', (data) => {
+      statusBar.textContent = data.message;
+      statusBar.className = 'status-bar error';
+      rematchBtn.style.display = 'none';
+      rematchStatus.textContent = '';
+    });
+
+ 
+    // tabla ujrafirssites
+    function updateBoard(board) {
+      cells.forEach((cell, index) => {
+        const value = board[index];
+        cell.textContent = value === 'X' ? '❌' : value === 'O' ? '⭕' : '';
+        cell.classList.toggle('taken', value !== '');
+      });
+    }
+ 
+
+ 
+    // uj gami
+    rematchBtn.addEventListener('click', () => {
+      socket.emit('requestRematch', { roomCode });
+      rematchBtn.disabled = true;
+      rematchBtn.textContent = 'Várakozás...';
+    });
+ 
+
+</script>
+</body>
+</html>
