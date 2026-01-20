@@ -11,16 +11,16 @@ const io = socketIO(server)
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
 
-// statikus fajlok
+// statikus fájlok
 
 app.use(express.static(path.join(__dirname, "public")))
 app.use(express.urlencoded({ extended: true }))
 
-// szba tarolas memoraiban
+// szoba tárolás memoriába
 
 const rooms = new Map()
 
-// szoba struktura
+// szoba struktúra
 
 class Room {
   constructor(code) {
@@ -186,7 +186,7 @@ io.on("connection", (socket) => {
 
     if (asSpectator || room.players.length >= 2) {
       if (!asSpectator && room.players.length >= 2) {
-        // tele a szboa akkor nezokent dob be
+        // tele a szoba akkor nezokent dob be
         socket.emit("errorMessage", {
           message: "A szoba megtelt. Nézőként csatlakoztál.",
           spectatorMode: true,
@@ -236,7 +236,7 @@ io.on("connection", (socket) => {
     io.to(roomCode).emit("stateUpdate", room.getState())
   })
 
-  // llepes
+  // lepes
   socket.on("makeMove", ({ roomCode, index }) => {
     const room = rooms.get(roomCode)
     if (!room) {
