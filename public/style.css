@@ -6,10 +6,8 @@
 
 body {
   font-family: 'Rajdhani', 'Orbitron', 'Segoe UI', sans-serif;
-  background: #0a0a0a;
-  background-image: 
-    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,.03) 2px, rgba(255,255,255,.03) 4px),
-    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,.03) 2px, rgba(255,255,255,.03) 4px);
+
+  background: url("/hatter/csillagos.png") center / cover no-repeat;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -17,6 +15,8 @@ body {
   padding: 20px;
   position: relative;
   overflow: hidden;
+
+  z-index: 0;
 }
 
 /* fenyes kozepso radial glow */
@@ -27,7 +27,7 @@ body::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 70%);
+  z-index: -1;
   pointer-events: none;
 }
 
@@ -39,19 +39,23 @@ body::after {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: 
-    radial-gradient(2px 2px at 20% 30%, white, transparent),
-    radial-gradient(2px 2px at 60% 70%, white, transparent),
-    radial-gradient(1px 1px at 50% 50%, white, transparent),
-    radial-gradient(1px 1px at 80% 10%, white, transparent),
-    radial-gradient(2px 2px at 90% 60%, white, transparent),
-    radial-gradient(1px 1px at 33% 80%, white, transparent),
-    radial-gradient(1px 1px at 15% 60%, white, transparent);
   background-size: 200% 200%;
   background-position: 0% 0%;
   animation: stars 12s linear infinite;
   pointer-events: none;
   opacity: 0.6;
+  z-index: -1;
+}
+.vader-bg {
+  position: fixed;
+  bottom: 0px;
+  right: 200px;
+  height: 85vh;
+  max-height: 900px;
+  opacity: 0.48;
+  pointer-events: none;
+  z-index: 0;
+  filter: grayscale(100%) contrast(1.2);
 }
 
 @keyframes stars {
@@ -66,7 +70,7 @@ body::after {
 /* urhajok animacioi */
 .spaceship {
   position: absolute;
-  opacity: 0.6;
+  opacity: 1;
   pointer-events: none;
   filter: brightness(1.6);
 }
@@ -128,7 +132,7 @@ body::after {
   width: 100%;
   max-width: 600px;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 /* lobby kartya fekete uveg dizajn */
