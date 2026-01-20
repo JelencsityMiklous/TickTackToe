@@ -57,6 +57,17 @@ body::after {
   z-index: 0;
   filter: grayscale(100%) contrast(1.2);
 }
+.anakin-bg {
+  position: fixed;
+  bottom: 10px;
+  left: 400px;
+  height: 85vh;
+  max-height: 900px;
+  opacity: 0.68;
+  pointer-events: none;
+  z-index: 0;
+  filter: grayscale(100%) contrast(1.2);
+}
 
 @keyframes stars {
   from {
