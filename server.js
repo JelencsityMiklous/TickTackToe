@@ -25,13 +25,13 @@ const rooms = new Map()
 class Room {
   constructor(code) {
     this.code = code
-    this.players = [] // max 2 jatekos
+    this.players = [] // max 2 játékos
     this.board = Array(9).fill("")
     this.turn = "X"
-    this.status = "waiting" // varakoszas
+    this.status = "waiting" // várakozás
     this.winner = null
     this.rematchReady = new Set()
-    this.spectators = [] // nezok
+    this.spectators = [] // nezők
   }
 
   addPlayer(socketId, name) {
@@ -56,7 +56,7 @@ class Room {
       return true
     }
 
-    // nezo eltavolitas
+    // Néző eltávolítás
 
     const specIndex = this.spectators.findIndex((s) => s.socketId === socketId)
     if (specIndex !== -1) {
@@ -84,17 +84,17 @@ class Room {
       return { success: false, error: "A mező foglalt" }
     this.board[index] = player.symbol
 
-    // gyozelem
+    // győzelem
 
     if (this.checkWinner()) {
       this.status = "finished"
       this.winner = player.symbol
     } else if (this.board.every((cell) => cell !== "")) {
-      // dontetlen
+      // döntetlen
       this.status = "finished"
       this.winner = "draw"
     } else {
-      // kovi jatekos
+      // Következő játékos
 
       this.turn = this.turn === "X" ? "O" : "X"
     }
@@ -105,14 +105,14 @@ class Room {
     const winPatterns = [
       [0, 1, 2],
       [3, 4, 5],
-      [6, 7, 8], // sorok
+      [6, 7, 8], // Sorok
 
       [0, 3, 6],
       [1, 4, 7],
-      [2, 5, 8], // oszlopok
+      [2, 5, 8], // Oszlopok
 
       [0, 4, 8],
-      [2, 4, 6], // atlok
+      [2, 4, 6], // Átlók
     ]
 
     return winPatterns.some((pattern) => {
@@ -129,7 +129,7 @@ class Room {
     this.rematchReady.add(socketId)
     if (this.rematchReady.size === 2) {
       this.resetGame()
-      return true // uj jatek
+      return true // Új játék
     }
     return false
   }
@@ -154,15 +154,15 @@ app.get("/room/:code", (req, res) => {
   res.render("room", { roomCode: req.params.code })
 })
 
-// socketio esemenyek
+// socketio események
 
 io.on("connection", (socket) => {
   console.log("Új kapcsolat:", socket.id)
 
-  // szoba csatlakozas
+  // szoba csatlakozás
 
   socket.on("joinRoom", ({ playerName, roomCode, asSpectator }) => {
-    // validacio
+    // validácio
 
     if (!playerName || playerName.length < 3) {
       socket.emit("errorMessage", {
@@ -176,13 +176,13 @@ io.on("connection", (socket) => {
       return
     }
 
-    // szoba letrehozas
+    // szoba létrehozása
     if (!rooms.has(roomCode)) {
       rooms.set(roomCode, new Room(roomCode))
     }
     const room = rooms.get(roomCode)
 
-    // nezomod
+    // Nézőmód
 
     if (asSpectator || room.players.length >= 2) {
       if (!asSpectator && room.players.length >= 2) {
@@ -207,7 +207,7 @@ io.on("connection", (socket) => {
       return
     }
 
-    // jatekoscsatlak
+    // jatekoscsatlakozás
 
     const symbol = room.addPlayer(socket.id, playerName)
     if (!symbol) {
